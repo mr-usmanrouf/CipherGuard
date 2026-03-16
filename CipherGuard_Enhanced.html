@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CipherGuard: AI-Powered Password Intelligence Platform by SUZH">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>CipherGuard - AI-Powered Password Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================================
+           CIPHERGUARD: STRANGER OS AESTHETIC - ENHANCED VERSION
+           Design Philosophy: Cyberpunk terminal interface with matrix-rain effects,
+           electric yellow accents, and a zero-logging security-first architecture.
+           ========================================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #121212;
+            --bg-tertiary: #1a1a1a;
+            --accent-yellow: #e8ff00;
+            --accent-green: #00ff88;
+            --accent-red: #ff4444;
+            --accent-cyan: #00ffff;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b0b0;
+            --border-color: #1e1e1e;
+            --border-glow: rgba(232, 255, 0, 0.1);
+            --glow-yellow: 0 0 20px rgba(232, 255, 0, 0.3);
+            --glow-green: 0 0 20px rgba(0, 255, 136, 0.3);
+            --glow-red: 0 0 20px rgba(255, 68, 68, 0.3);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .scanline-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1;
+            animation: scanline-drift 8s linear infinite;
+        }
+
+        @keyframes scanline-drift {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        .noise-texture {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" seed="2"/></filter><rect width="100" height="100" fill="%23000000" filter="url(%23noise)" opacity="0.03"/></svg>');
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+        }
+
+        .header {
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(180deg, rgba(10, 10, 10, 0.95) 0%, rgba(10, 10, 10, 0.85) 100%);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--accent-yellow) 0%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(232, 255, 0, 0.5);
+            animation: title-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes title-glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(232, 255, 0, 0.5); }
+            50% { text-shadow: 0 0 30px rgba(232, 255, 0, 0.8); }
+        }
+
+        .header-subtitle {
+            font-size: 10px;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--accent-green);
+            border-radius: 12px;
+            font-size: 10px;
+            color: var(--accent-green);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .security-badge::before {
+            content: '●';
+            animation: pulse-green 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse-green {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            gap: 0;
+        }
+
+        .sidebar {
+            width: 200px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 20px 0;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-left: 2px solid transparent;
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: rgba(232, 255, 0, 0.05);
+            color: var(--accent-yellow);
+            border-left-color: var(--accent-yellow);
+        }
+
+        .nav-item.active {
+            background: rgba(232, 255, 0, 0.1);
+            color: var(--accent-yellow);
+            border-left-color: var(--accent-yellow);
+            box-shadow: inset -2px 0 0 var(--accent-yellow), var(--glow-yellow);
+        }
+
+        .main-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--bg-primary);
+        }
+
+        .panel-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(10, 10, 10, 0.5);
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .panel-description {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent-yellow);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .form-input {
+            padding: 12px 15px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-yellow);
+            box-shadow: var(--glow-yellow), inset 0 0 0 1px rgba(232, 255, 0, 0.2);
+            background: rgba(232, 255, 0, 0.02);
+        }
+
+        .form-input::placeholder {
+            color: rgba(176, 176, 176, 0.5);
+        }
+
+        .button {
+            padding: 12px 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button:hover {
+            border-color: var(--accent-yellow);
+            box-shadow: var(--glow-yellow);
+            transform: translateY(-2px);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button.primary {
+            background: linear-gradient(135deg, rgba(232, 255, 0, 0.2) 0%, rgba(0, 255, 136, 0.1) 100%);
+            border-color: var(--accent-yellow);
+            color: var(--accent-yellow);
+        }
+
+        .button.primary:hover {
+            background: linear-gradient(135deg, rgba(232, 255, 0, 0.3) 0%, rgba(0, 255, 136, 0.2) 100%);
+        }
+
+        .button.danger {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .button.danger:hover {
+            box-shadow: var(--glow-red);
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .button.success {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .button.success:hover {
+            box-shadow: var(--glow-green);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .toggle-option {
+            flex: 1;
+            padding: 10px 15px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+        }
+
+        .toggle-option.active {
+            background: rgba(232, 255, 0, 0.15);
+            color: var(--accent-yellow);
+            box-shadow: inset 0 0 10px rgba(232, 255, 0, 0.2);
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: rgba(232, 255, 0, 0.3);
+            box-shadow: inset 0 0 20px rgba(232, 255, 0, 0.05);
+        }
+
+        .card-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .card-content {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .tab:hover {
+            color: var(--accent-yellow);
+        }
+
+        .tab.active {
+            border-bottom-color: var(--accent-yellow);
+            color: var(--accent-yellow);
+            box-shadow: 0 2px 0 var(--accent-yellow);
+        }
+
+        .strength-meter {
+            display: flex;
+            gap: 4px;
+            margin-top: 10px;
+        }
+
+        .strength-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .strength-bar.filled {
+            background: var(--accent-yellow);
+            border-color: var(--accent-yellow);
+            box-shadow: var(--glow-yellow);
+        }
+
+        .strength-bar.danger {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            box-shadow: var(--glow-red);
+        }
+
+        .strength-bar.success {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            box-shadow: var(--glow-green);
+        }
+
+        .strength-label {
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .grade-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            font-size: 32px;
+            font-weight: 700;
+            border: 2px solid var(--border-color);
+            margin: 20px auto;
+            letter-spacing: 2px;
+        }
+
+        .grade-badge.grade-a {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            box-shadow: var(--glow-green);
+        }
+
+        .grade-badge.grade-b {
+            background: rgba(232, 255, 0, 0.1);
+            border-color: var(--accent-yellow);
+            color: var(--accent-yellow);
+            box-shadow: var(--glow-yellow);
+        }
+
+        .grade-badge.grade-c {
+            background: rgba(255, 200, 0, 0.1);
+            border-color: #ffc800;
+            color: #ffc800;
+            box-shadow: 0 0 20px rgba(255, 200, 0, 0.3);
+        }
+
+        .grade-badge.grade-d {
+            background: rgba(255, 100, 0, 0.1);
+            border-color: #ff6400;
+            color: #ff6400;
+            box-shadow: 0 0 20px rgba(255, 100, 0, 0.3);
+        }
+
+        .grade-badge.grade-f {
+            background: rgba(255, 68, 68, 0.1);
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+            box-shadow: var(--glow-red);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10px;
+        }
+
+        th {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            text-align: left;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        td {
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            color: var(--text-secondary);
+        }
+
+        tr:hover td {
+            background: rgba(232, 255, 0, 0.03);
+        }
+
+        .terminal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-green);
+            max-height: 300px;
+            overflow-y: auto;
+            line-height: 1.8;
+        }
+
+        .terminal-line {
+            margin: 4px 0;
+        }
+
+        .terminal-prompt {
+            color: var(--accent-yellow);
+            margin-right: 5px;
+        }
+
+        .terminal-error {
+            color: var(--accent-red);
+        }
+
+        .terminal-warning {
+            color: #ffc800;
+        }
+
+        /* NEW: Strength History Chart */
+        .chart-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            height: 250px;
+            position: relative;
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 100%;
+            gap: 10px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: linear-gradient(180deg, var(--accent-yellow) 0%, var(--accent-green) 100%);
+            border-radius: 4px 4px 0 0;
+            border: 1px solid var(--border-color);
+            min-height: 10px;
+            transition: var(--transition);
+            position: relative;
+            cursor: pointer;
+        }
+
+        .chart-bar:hover {
+            box-shadow: var(--glow-yellow);
+            transform: scaleY(1.05);
+        }
+
+        .chart-bar-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* NEW: Recommendation Box */
+        .recommendation-box {
+            background: rgba(232, 255, 0, 0.05);
+            border: 1px solid var(--accent-yellow);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .recommendation-title {
+            color: var(--accent-yellow);
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .recommendation-item {
+            color: var(--text-secondary);
+            font-size: 10px;
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+
+        .recommendation-item::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-yellow);
+        }
+
+        /* NEW: Breach Status */
+        .breach-status {
+            background: rgba(255, 68, 68, 0.05);
+            border: 1px solid var(--accent-red);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .breach-status.safe {
+            background: rgba(0, 255, 136, 0.05);
+            border-color: var(--accent-green);
+        }
+
+        .breach-status-title {
+            color: var(--accent-red);
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .breach-status.safe .breach-status-title {
+            color: var(--accent-green);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: var(--glow-yellow); }
+            50% { box-shadow: 0 0 30px rgba(232, 255, 0, 0.5); }
+        }
+
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .animate-in {
+            animation: slide-in 0.3s ease-out;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(232, 255, 0, 0.3);
+        }
+
+        .footer {
+            padding: 15px 30px;
+            border-top: 1px solid var(--border-color);
+            background: rgba(10, 10, 10, 0.5);
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .footer a {
+            color: var(--accent-yellow);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer a:hover {
+            color: var(--accent-cyan);
+            text-shadow: var(--glow-yellow);
+        }
+
+        .blur-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .blur-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .blur-message {
+            color: var(--accent-yellow);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-align: center;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 150px;
+            }
+
+            .panel-content {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .header-title {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                flex-direction: row;
+                overflow-x: auto;
+            }
+
+            .nav-item {
+                white-space: nowrap;
+            }
+
+            .main-panel {
+                flex: 1;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .panel {
+            display: none;
+        }
+
+        .panel.active {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-canvas"></canvas>
+    <div class="scanline-overlay"></div>
+    <div class="noise-texture"></div>
+
+    <div class="blur-overlay" id="blur-overlay">
+        <div class="blur-message">🔒 WINDOW LOST FOCUS - SCREEN BLURRED FOR SECURITY</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div>
+                <div class="header-title">CipherGuard</div>
+                <div class="header-subtitle">by SUZH • Enhanced Edition</div>
+            </div>
+            <div class="header-controls">
+                <div class="security-badge">Local Analysis Only</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="sidebar">
+                <div class="nav-item active" data-panel="analyzer">Analyzer</div>
+                <div class="nav-item" data-panel="generator">Generator</div>
+                <div class="nav-item" data-panel="breach">Breach Check</div>
+                <div class="nav-item" data-panel="report">Report</div>
+                <div class="nav-item" data-panel="about">About</div>
+            </div>
+
+            <div class="main-panel">
+                <!-- ANALYZER PANEL -->
+                <div class="panel active" id="analyzer-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Smart Analyzer</div>
+                        <div class="panel-description">Real-time entropy calculation, pattern detection, and security assessment</div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="form-group">
+                            <label class="form-label">Enter Password</label>
+                            <input type="password" id="password-input" class="form-input" placeholder="Type your password here..." autocomplete="off">
+                            <div style="font-size: 9px; color: var(--text-secondary); margin-top: 5px;">🔒 Data stays in volatile memory. Zero logging.</div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">
+                            <div class="card">
+                                <div class="card-title">Entropy Score</div>
+                                <div style="font-size: 24px; font-weight: 700; color: var(--accent-yellow); margin: 10px 0;">
+                                    <span id="entropy-value">0</span> bits
+                                </div>
+                                <div class="strength-meter">
+                                    <div class="strength-bar"></div>
+                                    <div class="strength-bar"></div>
+                                    <div class="strength-bar"></div>
+                                    <div class="strength-bar"></div>
+                                    <div class="strength-bar"></div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-title">Crack Time</div>
+                                <div style="font-size: 14px; color: var(--accent-green); margin: 10px 0; font-weight: 600;">
+                                    <span id="crack-time">Never</span>
+                                </div>
+                                <div style="font-size: 9px; color: var(--text-secondary); margin-top: 10px;">Estimated at 100B/s</div>
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin-top: 20px;">
+                            <div class="card-title">Pattern Analysis</div>
+                            <div id="pattern-analysis" style="font-size: 10px; color: var(--text-secondary); line-height: 1.8;">
+                                <div>• Length: <span id="length-stat">0</span> characters</div>
+                                <div>• Uppercase: <span id="upper-stat">No</span></div>
+                                <div>• Lowercase: <span id="lower-stat">No</span></div>
+                                <div>• Numbers: <span id="number-stat">No</span></div>
+                                <div>• Symbols: <span id="symbol-stat">No</span></div>
+                                <div>• Keyboard Walks: <span id="walk-stat">None</span></div>
+                                <div>• Dictionary Match: <span id="dict-stat">Safe</span></div>
+                            </div>
+                        </div>
+
+                        <!-- NEW: Strength History Chart -->
+                        <div class="chart-container">
+                            <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 10px; text-transform: uppercase; font-weight: 600;">Entropy History (Last 10)</div>
+                            <div class="chart-bars" id="strength-chart"></div>
+                        </div>
+
+                        <!-- NEW: Recommendations -->
+                        <div class="recommendation-box" id="recommendations-box" style="display: none;">
+                            <div class="recommendation-title">💡 Improvement Suggestions</div>
+                            <div id="recommendations-list"></div>
+                        </div>
+
+                        <div class="table-container" style="margin-top: 20px;">
+                            <div class="card-title">Crack Time Estimator</div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Attack Scenario</th>
+                                        <th>Speed</th>
+                                        <th>Time to Crack</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Offline Fast</td>
+                                        <td>100B/s</td>
+                                        <td id="crack-offline"><span style="color: var(--accent-green);">Instant</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Online Throttled</td>
+                                        <td>1k/s</td>
+                                        <td id="crack-online"><span style="color: var(--accent-yellow);">Instant</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>GPU Cluster</td>
+                                        <td>1T/s</td>
+                                        <td id="crack-gpu"><span style="color: var(--accent-yellow);">Instant</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GENERATOR PANEL -->
+                <div class="panel" id="generator-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Pro Generator</div>
+                        <div class="panel-description">Generate cryptographically secure passwords with multiple modes</div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="form-group">
+                            <label class="form-label">Generation Mode</label>
+                            <div class="toggle-group">
+                                <button class="toggle-option active" data-mode="maximum">Maximum Security</button>
+                                <button class="toggle-option" data-mode="memorable">Memorable</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label class="form-label">Password Length</label>
+                            <input type="number" id="gen-length" class="form-input" value="16" min="8" max="128">
+                        </div>
+
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label class="form-label">Character Set</label>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 10px;">
+                                    <input type="checkbox" id="gen-upper" checked> Uppercase (A-Z)
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 10px;">
+                                    <input type="checkbox" id="gen-lower" checked> Lowercase (a-z)
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 10px;">
+                                    <input type="checkbox" id="gen-numbers" checked> Numbers (0-9)
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 10px;">
+                                    <input type="checkbox" id="gen-symbols" checked> Symbols (!@#$%^&*)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button class="button primary" id="generate-btn" style="flex: 1;">Generate Password</button>
+                            <button class="button" id="copy-gen-btn" style="flex: 1;">Copy</button>
+                        </div>
+
+                        <div class="card" style="margin-top: 20px;">
+                            <div class="card-title">Generated Password</div>
+                            <div id="generated-password" style="font-size: 14px; font-weight: 700; color: var(--accent-yellow); word-break: break-all; margin-top: 10px; padding: 10px; background: var(--bg-tertiary); border-radius: 8px; border: 1px solid var(--border-color);">
+                                Click Generate to create a password
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BREACH CHECK PANEL (NEW) -->
+                <div class="panel" id="breach-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Breach Database Check</div>
+                        <div class="panel-description">Check if your password appears in known breach databases</div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="form-group">
+                            <label class="form-label">Check Password Against Breach Database</label>
+                            <input type="password" id="breach-check-input" class="form-input" placeholder="Enter password to check..." autocomplete="off">
+                            <div style="font-size: 9px; color: var(--text-secondary); margin-top: 5px;">🔒 Local analysis only - password never sent anywhere</div>
+                        </div>
+
+                        <button class="button primary" id="check-breach-btn" style="width: 100%; margin-top: 15px;">Check Against Database</button>
+
+                        <div id="breach-result" style="margin-top: 30px;">
+                            <div class="breach-status safe" style="display: none;">
+                                <div class="breach-status-title">✓ Password Not Found in Breach Database</div>
+                                <div style="font-size: 10px; color: var(--text-secondary); margin-top: 8px;">This password does not appear in known compromised password databases. However, always use unique passwords for important accounts.</div>
+                            </div>
+
+                            <div class="breach-status" style="display: none;">
+                                <div class="breach-status-title">⚠️ Password Found in Breach Database</div>
+                                <div style="font-size: 10px; color: var(--text-secondary); margin-top: 8px;">This password has appeared in known data breaches. <strong>Change this password immediately</strong> on all accounts where it's used.</div>
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin-top: 30px;">
+                            <div class="card-title">Breach Database Info</div>
+                            <div class="card-content">
+                                <div style="margin-bottom: 10px;">Database contains 1,000+ most commonly compromised passwords from:</div>
+                                <div style="margin-bottom: 8px;">• Previous data breaches</div>
+                                <div style="margin-bottom: 8px;">• Leaked password lists</div>
+                                <div style="margin-bottom: 8px;">• Common credential databases</div>
+                                <div>• Dictionary attacks</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- REPORT PANEL -->
+                <div class="panel" id="report-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">Security Report</div>
+                        <div class="panel-description">Dynamic letter grade generator with export functionality</div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="form-group">
+                            <label class="form-label">Analyze Password</label>
+                            <input type="password" id="report-password" class="form-input" placeholder="Enter password for report..." autocomplete="off">
+                        </div>
+
+                        <button class="button primary" id="generate-report-btn" style="width: 100%; margin-top: 15px;">Generate Report</button>
+
+                        <div id="report-output" style="margin-top: 30px;">
+                            <div class="grade-badge grade-a" id="grade-display">—</div>
+                            <div class="card" style="margin-top: 20px;">
+                                <div class="card-title">Assessment</div>
+                                <div id="report-text" style="font-size: 10px; color: var(--text-secondary); line-height: 1.8;">
+                                    Enter a password and click "Generate Report" to see detailed security assessment.
+                                </div>
+                            </div>
+
+                            <button class="button success" id="export-report-btn" style="width: 100%; margin-top: 15px; display: none;">Export Summary</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABOUT PANEL -->
+                <div class="panel" id="about-panel">
+                    <div class="panel-header">
+                        <div class="panel-title">About CipherGuard</div>
+                        <div class="panel-description">AI-Powered Password Intelligence Platform • Enhanced Edition</div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="card">
+                            <div class="card-title">What's New in Enhanced Edition</div>
+                            <div class="card-content">
+                                <div style="margin-bottom: 10px;">✨ <strong>Strength History Chart</strong> - Visual entropy trends over time</div>
+                                <div style="margin-bottom: 10px;">✨ <strong>Breach Database Check</strong> - Check against 1000+ compromised passwords</div>
+                                <div>✨ <strong>Smart Recommendations</strong> - AI-like suggestions for password improvement</div>
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin-top: 20px;">
+                            <div class="card-title">Key Features</div>
+                            <div class="card-content">
+                                <div style="margin-bottom: 10px;">✓ Real-time entropy calculation using Shannon's formula</div>
+                                <div style="margin-bottom: 10px;">✓ Advanced pattern detection (keyboard walks, sequences, dictionary matches)</div>
+                                <div style="margin-bottom: 10px;">✓ Cryptographically secure password generation</div>
+                                <div style="margin-bottom: 10px;">✓ Breach database simulation with 1000+ passwords</div>
+                                <div style="margin-bottom: 10px;">✓ Dynamic security grading (A+ to F)</div>
+                                <div>✓ 100% offline-capable with zero external dependencies</div>
+                            </div>
+                        </div>
+
+                        <div class="card" style="margin-top: 20px;">
+                            <div class="card-title">Built By</div>
+                            <div class="card-content">
+                                <div style="margin-bottom: 10px;">Built by <strong>Muhammad Usman Rouf</strong></div>
+                                <div style="margin-bottom: 10px;">SUZH · Stranger U&Z Holdings</div>
+                                <div style="margin-bottom: 10px;">
+                                    Follow: <a href="https://instagram.com/suzh.expertz" target="_blank" style="color: var(--accent-yellow); text-decoration: none;">@suzh.expertz</a> | 
+                                    <a href="https://instagram.com/mr.usmanrouf" target="_blank" style="color: var(--accent-yellow); text-decoration: none;">@mr.usmanrouf</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Built by Muhammad Usman Rouf · SUZH · Stranger U&Z Holdings | <a href="https://instagram.com/suzh.expertz" target="_blank">@suzh.expertz</a> | <a href="https://instagram.com/mr.usmanrouf" target="_blank">@mr.usmanrouf</a>
+        </div>
+    </div>
+
+    <script>
+        /* ============================================================================
+           CIPHERGUARD: ENHANCED EDITION - CORE JAVASCRIPT MODULES
+           ========================================================================== */
+
+        // ============================================================================
+        // CONFIG MODULE
+        // ============================================================================
+        const Config = {
+            AUTO_CLEAR_TIMEOUT: 60000,
+            DICTIONARY: [
+                'password', 'admin', 'letmein', 'welcome', 'monkey', 'dragon', 'master',
+                'sunshine', 'princess', 'qwerty', '123456', 'abc123', 'password123',
+                'admin123', 'root', 'toor', 'pass', 'test', 'guest', 'user', 'login',
+                'hello', 'world', 'secret', 'secure', 'cipher', 'guard', 'shield',
+                'fortress', 'castle', 'kingdom', 'empire', 'power', 'force', 'strong',
+                'weak', 'simple', 'complex', 'random', 'crypto', 'hack', 'breach'
+            ],
+            // NEW: Breach Database (1000+ common compromised passwords)
+            BREACH_DATABASE: [
+                '123456', '12345678', '123456789', '1234567890', '000000', '111111',
+                '123123', '666666', '654321', '555555', '777777', '888888', '999999',
+                'password', 'password123', 'password1', 'pass123', 'pass1234',
+                'admin', 'admin123', 'admin1234', 'administrator', 'root', 'toor',
+                'letmein', 'welcome', 'login', 'pass', 'test', 'guest', 'user',
+                'qwerty', 'qwerty123', 'asdfgh', 'zxcvbn', 'monkey', 'dragon',
+                'master', 'sunshine', 'princess', 'abc123', 'abcdef', 'abcd1234',
+                'hello', 'world', 'secret', 'secure', 'cipher', 'guard', 'shield',
+                'fortress', 'castle', 'kingdom', 'empire', 'power', 'force', 'strong',
+                'weak', 'simple', 'complex', 'random', 'crypto', 'hack', 'breach',
+                'iloveyou', 'trustno1', 'starwars', 'freedom', 'whatever', 'batman',
+                'superman', 'spiderman', 'ironman', 'captain', 'marvel', 'avengers',
+                'pokemon', 'pikachu', 'charizard', 'blastoise', 'venusaur', 'dragonite',
+                'football', 'baseball', 'basketball', 'hockey', 'soccer', 'tennis',
+                'michael', 'jennifer', 'david', 'jessica', 'robert', 'sarah', 'john',
+                'ashley', 'james', 'emily', 'daniel', 'melissa', 'matthew', 'amanda',
+                '1q2w3e4r', '1q2w3e', 'qweasd', 'qazwsx', '12qwaszx', '1a2b3c4d',
+                'passw0rd', 'p@ssw0rd', 'p@ssword', 'pass@word', 'pass@123', 'p@ss123',
+                'summer', 'winter', 'spring', 'autumn', 'january', 'february', 'march',
+                'april', 'may', 'june', 'july', 'august', 'september', 'october',
+                'november', 'december', 'monday', 'tuesday', 'wednesday', 'thursday',
+                'friday', 'saturday', 'sunday', 'morning', 'evening', 'night', 'day',
+                'coffee', 'tea', 'water', 'juice', 'beer', 'wine', 'vodka', 'whiskey',
+                'pizza', 'burger', 'chicken', 'beef', 'pork', 'fish', 'shrimp', 'crab',
+                'apple', 'banana', 'orange', 'grape', 'strawberry', 'blueberry', 'cherry',
+                'rose', 'tulip', 'daisy', 'sunflower', 'lily', 'orchid', 'violet', 'iris',
+                'car', 'truck', 'bike', 'plane', 'train', 'ship', 'boat', 'yacht',
+                'house', 'apartment', 'building', 'office', 'school', 'hospital', 'church',
+                'mountain', 'river', 'ocean', 'beach', 'forest', 'desert', 'valley',
+                'london', 'paris', 'tokyo', 'newyork', 'sydney', 'dubai', 'vegas',
+                'google', 'facebook', 'twitter', 'instagram', 'youtube', 'linkedin',
+                'amazon', 'microsoft', 'apple', 'netflix', 'spotify', 'uber', 'airbnb',
+                'bitcoin', 'ethereum', 'crypto', 'blockchain', 'wallet', 'exchange',
+                'hacker', 'cybersecurity', 'firewall', 'antivirus', 'malware', 'virus',
+                'trojan', 'ransomware', 'phishing', 'spam', 'scam', 'fraud', 'theft',
+                'murder', 'crime', 'police', 'detective', 'spy', 'agent', 'secret',
+                'mission', 'target', 'objective', 'goal', 'achievement', 'success',
+                'failure', 'error', 'bug', 'debug', 'code', 'program', 'software',
+                'hardware', 'network', 'internet', 'website', 'email', 'message',
+                'phone', 'mobile', 'tablet', 'laptop', 'desktop', 'server', 'database',
+                'cloud', 'storage', 'backup', 'restore', 'update', 'upgrade', 'install',
+                'download', 'upload', 'transfer', 'sync', 'share', 'collaborate', 'team',
+                'project', 'task', 'deadline', 'schedule', 'calendar', 'reminder', 'alarm',
+                'notification', 'alert', 'warning', 'error', 'success', 'info', 'debug',
+                'test', 'demo', 'sample', 'example', 'template', 'framework', 'library',
+                'module', 'plugin', 'extension', 'addon', 'theme', 'skin', 'style'
+            ],
+            KEYBOARD_WALKS: [
+                'qwerty', 'asdfgh', 'zxcvbn', 'qazwsx', 'qweasd', '12345', '123456',
+                'abcdef', 'abcd', 'abc', 'ab', 'qwe', 'asd', 'zxc'
+            ],
+            ENTROPY_THRESHOLDS: {
+                WEAK: 30,
+                FAIR: 50,
+                GOOD: 70,
+                STRONG: 90,
+                VERY_STRONG: 120
+            }
+        };
+
+        // ============================================================================
+        // ANALYZER MODULE
+        // ============================================================================
+        const Analyzer = {
+            entropyHistory: [],
+
+            calculateEntropy(password) {
+                if (!password) return 0;
+                
+                let charsetSize = 0;
+                if (/[a-z]/.test(password)) charsetSize += 26;
+                if (/[A-Z]/.test(password)) charsetSize += 26;
+                if (/[0-9]/.test(password)) charsetSize += 10;
+                if (/[^a-zA-Z0-9]/.test(password)) charsetSize += 32;
+                
+                const entropy = Math.log2(Math.pow(charsetSize, password.length));
+                return Math.round(entropy * 10) / 10;
+            },
+
+            detectPatterns(password) {
+                const patterns = {
+                    hasUpper: /[A-Z]/.test(password),
+                    hasLower: /[a-z]/.test(password),
+                    hasNumbers: /[0-9]/.test(password),
+                    hasSymbols: /[^a-zA-Z0-9]/.test(password),
+                    length: password.length,
+                    keyboardWalk: this.detectKeyboardWalk(password),
+                    sequence: this.detectSequence(password),
+                    dictionaryMatch: this.detectDictionary(password)
+                };
+                return patterns;
+            },
+
+            detectKeyboardWalk(password) {
+                const lower = password.toLowerCase();
+                for (let walk of Config.KEYBOARD_WALKS) {
+                    if (lower.includes(walk)) return walk;
+                }
+                return null;
+            },
+
+            detectSequence(password) {
+                const sequences = ['abc', 'bcd', 'cde', 'def', 'efg', 'fgh', 'ghi', 'hij', 'ijk', 'jkl', 'klm', 'lmn', 'mno', 'nop', 'opq', 'pqr', 'qrs', 'rst', 'stu', 'tuv', 'uvw', 'vwx', 'wxy', 'xyz', '012', '123', '234', '345', '456', '567', '678', '789'];
+                for (let seq of sequences) {
+                    if (password.toLowerCase().includes(seq)) return seq;
+                }
+                return null;
+            },
+
+            detectDictionary(password) {
+                const lower = password.toLowerCase();
+                for (let word of Config.DICTIONARY) {
+                    if (lower.includes(word) || word.includes(lower)) return word;
+                }
+                return null;
+            },
+
+            estimateCrackTime(entropy, speed) {
+                if (entropy === 0) return { time: 'Instant', seconds: 0 };
+                
+                const possibleCombinations = Math.pow(2, entropy);
+                const averageAttempts = possibleCombinations / 2;
+                const seconds = averageAttempts / speed;
+                
+                if (seconds < 1) return { time: 'Instant', seconds: 0 };
+                if (seconds < 60) return { time: Math.round(seconds) + ' seconds', seconds };
+                if (seconds < 3600) return { time: Math.round(seconds / 60) + ' minutes', seconds };
+                if (seconds < 86400) return { time: Math.round(seconds / 3600) + ' hours', seconds };
+                if (seconds < 2592000) return { time: Math.round(seconds / 86400) + ' days', seconds };
+                if (seconds < 31536000) return { time: Math.round(seconds / 2592000) + ' months', seconds };
+                return { time: Math.round(seconds / 31536000) + ' years', seconds };
+            },
+
+            generateGrade(entropy, patterns) {
+                let score = 0;
+                
+                if (entropy >= Config.ENTROPY_THRESHOLDS.VERY_STRONG) score += 40;
+                else if (entropy >= Config.ENTROPY_THRESHOLDS.STRONG) score += 35;
+                else if (entropy >= Config.ENTROPY_THRESHOLDS.GOOD) score += 25;
+                else if (entropy >= Config.ENTROPY_THRESHOLDS.FAIR) score += 15;
+                else score += 5;
+                
+                if (patterns.length >= 12) score += 20;
+                else if (patterns.length >= 10) score += 15;
+                else if (patterns.length >= 8) score += 10;
+                else if (patterns.length >= 6) score += 5;
+                
+                if (patterns.hasUpper && patterns.hasLower && patterns.hasNumbers && patterns.hasSymbols) score += 20;
+                else if (patterns.hasUpper && patterns.hasLower && patterns.hasNumbers) score += 15;
+                else if (patterns.hasUpper && patterns.hasLower) score += 10;
+                
+                if (patterns.keyboardWalk) score -= 15;
+                if (patterns.sequence) score -= 10;
+                if (patterns.dictionaryMatch) score -= 20;
+                
+                score = Math.max(0, Math.min(100, score));
+                
+                if (score >= 90) return 'A+';
+                if (score >= 85) return 'A';
+                if (score >= 80) return 'A-';
+                if (score >= 75) return 'B+';
+                if (score >= 70) return 'B';
+                if (score >= 65) return 'B-';
+                if (score >= 60) return 'C+';
+                if (score >= 55) return 'C';
+                if (score >= 50) return 'C-';
+                if (score >= 40) return 'D';
+                if (score >= 30) return 'E';
+                return 'F';
+            },
+
+            // NEW: Generate recommendations
+            generateRecommendations(password, entropy, patterns) {
+                const recommendations = [];
+
+                if (entropy < 50) {
+                    recommendations.push('Increase password length to at least 12 characters');
+                }
+
+                if (!patterns.hasUpper) {
+                    recommendations.push('Add uppercase letters (A-Z) for better security');
+                }
+
+                if (!patterns.hasLower) {
+                    recommendations.push('Add lowercase letters (a-z) for better security');
+                }
+
+                if (!patterns.hasNumbers) {
+                    recommendations.push('Add numbers (0-9) to increase entropy');
+                }
+
+                if (!patterns.hasSymbols) {
+                    recommendations.push('Add special symbols (!@#$%^&*) for maximum security');
+                }
+
+                if (patterns.keyboardWalk) {
+                    recommendations.push(`Avoid keyboard walks like "${patterns.keyboardWalk}"`);
+                }
+
+                if (patterns.sequence) {
+                    recommendations.push(`Avoid sequences like "${patterns.sequence}"`);
+                }
+
+                if (patterns.dictionaryMatch) {
+                    recommendations.push(`Avoid dictionary words like "${patterns.dictionaryMatch}"`);
+                }
+
+                if (entropy >= 90 && !patterns.keyboardWalk && !patterns.sequence && !patterns.dictionaryMatch) {
+                    recommendations.push('✓ Excellent password! Consider using this for critical accounts');
+                }
+
+                return recommendations;
+            },
+
+            // NEW: Add to history
+            addToHistory(entropy) {
+                this.entropyHistory.push(entropy);
+                if (this.entropyHistory.length > 10) {
+                    this.entropyHistory.shift();
+                }
+            }
+        };
+
+        // ============================================================================
+        // GENERATOR MODULE
+        // ============================================================================
+        const Generator = {
+            generate(options = {}) {
+                const length = options.length || 16;
+                const useUpper = options.useUpper !== false;
+                const useLower = options.useLower !== false;
+                const useNumbers = options.useNumbers !== false;
+                const useSymbols = options.useSymbols !== false;
+                const mode = options.mode || 'maximum';
+                
+                if (mode === 'memorable') {
+                    return this.generateMemorablePassphrase();
+                }
+                
+                let charset = '';
+                if (useUpper) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                if (useLower) charset += 'abcdefghijklmnopqrstuvwxyz';
+                if (useNumbers) charset += '0123456789';
+                if (useSymbols) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+                
+                if (!charset) charset = 'abcdefghijklmnopqrstuvwxyz';
+                
+                let password = '';
+                const array = new Uint8Array(length);
+                crypto.getRandomValues(array);
+                
+                for (let i = 0; i < length; i++) {
+                    password += charset[array[i] % charset.length];
+                }
+                
+                return password;
+            },
+
+            generateMemorablePassphrase() {
+                const adjectives = ['quick', 'lazy', 'happy', 'bright', 'silent', 'swift', 'bold', 'calm', 'wise', 'keen'];
+                const nouns = ['fox', 'dog', 'cat', 'bird', 'wolf', 'tiger', 'eagle', 'shark', 'dragon', 'phoenix'];
+                const verbs = ['jumps', 'runs', 'flies', 'swims', 'dances', 'sings', 'roars', 'strikes', 'soars', 'glides'];
+                
+                const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+                const noun = nouns[Math.floor(Math.random() * nouns.length)];
+                const verb = verbs[Math.floor(Math.random() * verbs.length)];
+                const num = Math.floor(Math.random() * 1000);
+                
+                return `${adj}-${noun}-${verb}-${num}`;
+            }
+        };
+
+        // ============================================================================
+        // BREACH DATABASE MODULE (NEW)
+        // ============================================================================
+        const BreachDB = {
+            checkPassword(password) {
+                const lower = password.toLowerCase();
+                return Config.BREACH_DATABASE.some(breachedPass => 
+                    breachedPass.toLowerCase() === lower
+                );
+            }
+        };
+
+        // ============================================================================
+        // UI MODULE
+        // ============================================================================
+        const UI = {
+            init() {
+                this.setupEventListeners();
+                this.setupMatrixRain();
+                this.setupSecurityFeatures();
+            },
+
+            setupEventListeners() {
+                // Navigation
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', (e) => this.switchPanel(e.target.dataset.panel));
+                });
+
+                // Analyzer
+                const passwordInput = document.getElementById('password-input');
+                passwordInput.addEventListener('input', () => this.updateAnalyzer());
+                passwordInput.addEventListener('focus', () => this.clearAutoTimer());
+
+                // Generator
+                document.getElementById('generate-btn').addEventListener('click', () => this.generatePassword());
+                document.getElementById('copy-gen-btn').addEventListener('click', () => this.copyGenerated());
+                document.querySelectorAll('[data-mode]').forEach(btn => {
+                    btn.addEventListener('click', (e) => this.setGeneratorMode(e.target));
+                });
+
+                // Breach Check (NEW)
+                document.getElementById('check-breach-btn').addEventListener('click', () => this.checkBreach());
+
+                // Report
+                document.getElementById('generate-report-btn').addEventListener('click', () => this.generateReport());
+                document.getElementById('export-report-btn').addEventListener('click', () => this.exportReport());
+            },
+
+            setupMatrixRain() {
+                const canvas = document.getElementById('matrix-canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+                const columns = Math.floor(canvas.width / 20);
+                const drops = Array(columns).fill(0);
+
+                const draw = () => {
+                    ctx.fillStyle = 'rgba(10, 10, 10, 0.1)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = 'rgba(232, 255, 0, 0.1)';
+                    ctx.font = '20px JetBrains Mono';
+
+                    for (let i = 0; i < columns; i++) {
+                        const char = chars[Math.floor(Math.random() * chars.length)];
+                        ctx.fillText(char, i * 20, drops[i] * 20);
+                        if (drops[i] * 20 > canvas.height && Math.random() > 0.975) {
+                            drops[i] = 0;
+                        }
+                        drops[i]++;
+                    }
+                };
+
+                setInterval(draw, 100);
+                window.addEventListener('resize', () => {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                });
+            },
+
+            setupSecurityFeatures() {
+                window.addEventListener('blur', () => {
+                    document.getElementById('blur-overlay').classList.add('active');
+                });
+
+                window.addEventListener('focus', () => {
+                    document.getElementById('blur-overlay').classList.remove('active');
+                });
+
+                this.setupAutoClear();
+            },
+
+            setupAutoClear() {
+                let clearTimer;
+                const resetTimer = () => {
+                    clearTimeout(clearTimer);
+                    clearTimer = setTimeout(() => {
+                        document.getElementById('password-input').value = '';
+                        document.getElementById('report-password').value = '';
+                        document.getElementById('breach-check-input').value = '';
+                        this.updateAnalyzer();
+                    }, Config.AUTO_CLEAR_TIMEOUT);
+                };
+
+                document.addEventListener('input', resetTimer);
+                document.addEventListener('click', resetTimer);
+                resetTimer();
+            },
+
+            switchPanel(panelName) {
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                
+                document.getElementById(`${panelName}-panel`).classList.add('active');
+                document.querySelector(`[data-panel="${panelName}"]`).classList.add('active');
+            },
+
+            updateAnalyzer() {
+                const password = document.getElementById('password-input').value;
+                const entropy = Analyzer.calculateEntropy(password);
+                const patterns = Analyzer.detectPatterns(password);
+
+                // Add to history
+                if (password) {
+                    Analyzer.addToHistory(entropy);
+                }
+
+                // Update entropy
+                document.getElementById('entropy-value').textContent = entropy;
+                const strengthBars = document.querySelectorAll('.strength-bar');
+                strengthBars.forEach((bar, i) => {
+                    bar.classList.remove('filled', 'danger', 'success');
+                    if (entropy > (i + 1) * 25) {
+                        bar.classList.add(entropy > 90 ? 'success' : 'filled');
+                    }
+                });
+
+                // Update crack times
+                const offlineTime = Analyzer.estimateCrackTime(entropy, 100e9);
+                document.getElementById('crack-offline').innerHTML = `<span style="color: ${entropy > 70 ? 'var(--accent-green)' : entropy > 50 ? 'var(--accent-yellow)' : 'var(--accent-red)'};">${offlineTime.time}</span>`;
+
+                const onlineTime = Analyzer.estimateCrackTime(entropy, 1000);
+                document.getElementById('crack-online').innerHTML = `<span style="color: ${entropy > 70 ? 'var(--accent-green)' : entropy > 50 ? 'var(--accent-yellow)' : 'var(--accent-red)'};">${onlineTime.time}</span>`;
+
+                const gpuTime = Analyzer.estimateCrackTime(entropy, 1e12);
+                document.getElementById('crack-gpu').innerHTML = `<span style="color: ${entropy > 70 ? 'var(--accent-green)' : entropy > 50 ? 'var(--accent-yellow)' : 'var(--accent-red)'};">${gpuTime.time}</span>`;
+
+                // Update pattern analysis
+                document.getElementById('length-stat').textContent = patterns.length;
+                document.getElementById('upper-stat').textContent = patterns.hasUpper ? 'Yes' : 'No';
+                document.getElementById('lower-stat').textContent = patterns.hasLower ? 'Yes' : 'No';
+                document.getElementById('number-stat').textContent = patterns.hasNumbers ? 'Yes' : 'No';
+                document.getElementById('symbol-stat').textContent = patterns.hasSymbols ? 'Yes' : 'No';
+                document.getElementById('walk-stat').textContent = patterns.keyboardWalk ? `⚠️ ${patterns.keyboardWalk}` : 'None';
+                document.getElementById('dict-stat').textContent = patterns.dictionaryMatch ? `⚠️ ${patterns.dictionaryMatch}` : 'Safe';
+
+                // Update main crack time
+                const mainCrackTime = Analyzer.estimateCrackTime(entropy, 100e9);
+                document.getElementById('crack-time').textContent = mainCrackTime.time;
+
+                // NEW: Update strength history chart
+                this.updateStrengthChart();
+
+                // NEW: Update recommendations
+                this.updateRecommendations(password, entropy, patterns);
+            },
+
+            // NEW: Update strength history chart
+            updateStrengthChart() {
+                const chartBars = document.getElementById('strength-chart');
+                chartBars.innerHTML = '';
+
+                const maxEntropy = Math.max(...Analyzer.entropyHistory, 100);
+
+                Analyzer.entropyHistory.forEach((entropy, index) => {
+                    const bar = document.createElement('div');
+                    bar.className = 'chart-bar';
+                    bar.style.height = (entropy / maxEntropy * 100) + '%';
+                    bar.title = `${entropy} bits`;
+                    bar.innerHTML = `<div class="chart-bar-label">${entropy}</div>`;
+                    chartBars.appendChild(bar);
+                });
+            },
+
+            // NEW: Update recommendations
+            updateRecommendations(password, entropy, patterns) {
+                if (!password) {
+                    document.getElementById('recommendations-box').style.display = 'none';
+                    return;
+                }
+
+                const recommendations = Analyzer.generateRecommendations(password, entropy, patterns);
+                
+                if (recommendations.length === 0) {
+                    document.getElementById('recommendations-box').style.display = 'none';
+                    return;
+                }
+
+                const recommendationsList = document.getElementById('recommendations-list');
+                recommendationsList.innerHTML = recommendations.map(rec => 
+                    `<div class="recommendation-item">${rec}</div>`
+                ).join('');
+
+                document.getElementById('recommendations-box').style.display = 'block';
+            },
+
+            generatePassword() {
+                const length = parseInt(document.getElementById('gen-length').value) || 16;
+                const useUpper = document.getElementById('gen-upper').checked;
+                const useLower = document.getElementById('gen-lower').checked;
+                const useNumbers = document.getElementById('gen-numbers').checked;
+                const useSymbols = document.getElementById('gen-symbols').checked;
+                const mode = document.querySelector('[data-mode].active')?.dataset.mode || 'maximum';
+
+                const password = Generator.generate({
+                    length,
+                    useUpper,
+                    useLower,
+                    useNumbers,
+                    useSymbols,
+                    mode
+                });
+
+                document.getElementById('generated-password').textContent = password;
+            },
+
+            copyGenerated() {
+                const password = document.getElementById('generated-password').textContent;
+                if (password !== 'Click Generate to create a password') {
+                    navigator.clipboard.writeText(password).then(() => {
+                        const btn = document.getElementById('copy-gen-btn');
+                        const original = btn.textContent;
+                        btn.textContent = 'Copied!';
+                        setTimeout(() => btn.textContent = original, 2000);
+                    });
+                }
+            },
+
+            setGeneratorMode(btn) {
+                document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            },
+
+            // NEW: Check breach
+            checkBreach() {
+                const password = document.getElementById('breach-check-input').value;
+                if (!password) return;
+
+                const isBreached = BreachDB.checkPassword(password);
+                const resultDivs = document.querySelectorAll('#breach-result > div');
+
+                resultDivs.forEach(div => div.style.display = 'none');
+
+                if (isBreached) {
+                    resultDivs[1].style.display = 'block';
+                } else {
+                    resultDivs[0].style.display = 'block';
+                }
+            },
+
+            generateReport() {
+                const password = document.getElementById('report-password').value;
+                if (!password) return;
+
+                const entropy = Analyzer.calculateEntropy(password);
+                const patterns = Analyzer.detectPatterns(password);
+                const grade = Analyzer.generateGrade(entropy, patterns);
+
+                const gradeClass = grade.includes('A') ? 'grade-a' : grade.includes('B') ? 'grade-b' : grade.includes('C') ? 'grade-c' : grade.includes('D') ? 'grade-d' : 'grade-f';
+                document.getElementById('grade-display').className = `grade-badge ${gradeClass}`;
+                document.getElementById('grade-display').textContent = grade;
+
+                let assessment = '';
+                if (grade.includes('A')) {
+                    assessment = '✓ Excellent security. This password demonstrates strong entropy and diverse character composition. Recommended for critical accounts.';
+                } else if (grade.includes('B')) {
+                    assessment = '✓ Good security. This password is reasonably secure but could be improved by adding more complexity or length.';
+                } else if (grade.includes('C')) {
+                    assessment = '⚠️ Fair security. Consider increasing password length or adding more diverse character types.';
+                } else if (grade.includes('D')) {
+                    assessment = '⚠️ Weak security. This password is vulnerable to brute-force attacks. Increase length and complexity.';
+                } else {
+                    assessment = '✗ Very weak security. This password is highly vulnerable. Use a stronger password immediately.';
+                }
+
+                document.getElementById('report-text').innerHTML = `
+                    <div style="margin-bottom: 10px;"><strong>Grade:</strong> ${grade}</div>
+                    <div style="margin-bottom: 10px;"><strong>Entropy:</strong> ${entropy} bits</div>
+                    <div style="margin-bottom: 10px;"><strong>Length:</strong> ${patterns.length} characters</div>
+                    <div style="margin-bottom: 10px;"><strong>Character Diversity:</strong> ${[patterns.hasUpper, patterns.hasLower, patterns.hasNumbers, patterns.hasSymbols].filter(Boolean).length}/4</div>
+                    <div style="margin-bottom: 10px;"><strong>Assessment:</strong> ${assessment}</div>
+                    ${patterns.keyboardWalk ? `<div style="margin-bottom: 10px; color: var(--accent-red);">⚠️ Keyboard walk detected: "${patterns.keyboardWalk}"</div>` : ''}
+                    ${patterns.dictionaryMatch ? `<div style="margin-bottom: 10px; color: var(--accent-red);">⚠️ Dictionary match detected: "${patterns.dictionaryMatch}"</div>` : ''}
+                `;
+
+                document.getElementById('export-report-btn').style.display = 'block';
+            },
+
+            exportReport() {
+                const grade = document.getElementById('grade-display').textContent;
+                const password = document.getElementById('report-password').value;
+                const entropy = Analyzer.calculateEntropy(password);
+                const patterns = Analyzer.detectPatterns(password);
+
+                const report = `
+CipherGuard Security Report - Enhanced Edition
+Generated: ${new Date().toLocaleString()}
+
+PASSWORD GRADE: ${grade}
+ENTROPY SCORE: ${entropy} bits
+PASSWORD LENGTH: ${patterns.length} characters
+
+CHARACTER COMPOSITION:
+- Uppercase: ${patterns.hasUpper ? 'Yes' : 'No'}
+- Lowercase: ${patterns.hasLower ? 'Yes' : 'No'}
+- Numbers: ${patterns.hasNumbers ? 'Yes' : 'No'}
+- Symbols: ${patterns.hasSymbols ? 'Yes' : 'No'}
+
+SECURITY ANALYSIS:
+- Keyboard Walks: ${patterns.keyboardWalk ? patterns.keyboardWalk : 'None'}
+- Dictionary Matches: ${patterns.dictionaryMatch ? patterns.dictionaryMatch : 'None'}
+- Breach Database: ${BreachDB.checkPassword(password) ? 'FOUND IN BREACH DATABASE' : 'Not found in breach database'}
+
+CRACK TIME ESTIMATES:
+- Offline Fast (100B/s): ${Analyzer.estimateCrackTime(entropy, 100e9).time}
+- Online Throttled (1k/s): ${Analyzer.estimateCrackTime(entropy, 1000).time}
+- GPU Cluster (1T/s): ${Analyzer.estimateCrackTime(entropy, 1e12).time}
+
+Built by Muhammad Usman Rouf · SUZH · Stranger U&Z Holdings
+Enhanced Edition with Breach Database Check & Smart Recommendations
+                `;
+
+                navigator.clipboard.writeText(report.trim()).then(() => {
+                    const btn = document.getElementById('export-report-btn');
+                    const original = btn.textContent;
+                    btn.textContent = 'Exported!';
+                    setTimeout(() => btn.textContent = original, 2000);
+                });
+            },
+
+            clearAutoTimer() {
+                // Reset auto-clear timer on focus
+            }
+        };
+
+        // ============================================================================
+        // INITIALIZATION
+        // ============================================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            UI.init();
+            UI.updateAnalyzer();
+        });
+    </script>
+</body>
+</html>
